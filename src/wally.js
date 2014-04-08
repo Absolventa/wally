@@ -151,6 +151,7 @@
             imagesLength = this.images.length;
         for (i = 0; i < imagesLength; i += 1) {
             if (this.config.blur) {
+                // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
                 this.images[i].style.WebkitFilter = 'blur(5px)';
                 this.images[i].style.filter = 'url(images/blur.svg#blur)';
             }
