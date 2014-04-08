@@ -3,14 +3,41 @@
     <link rel="stylesheet" href="
 https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
     <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <script src="namespace.js"></script>
-    <script src="wally.js"></script>
-    <script src="helpers.js"></script>
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>-->
     <style>
-
+      .wally_container {
+        margin-bottom: 50px;
+      }
     </style>
   </head>
   <body>
+    <h2>Raw images</h2>
+    <div class="wally_3_container">
+      <img src="images/image_8.jpg">
+      <img src="images/image_9.jpg">
+      <img src="images/image_10.jpg">
+    </div>
+
+    <h2>With overlay</h2>
+    <div class="wally_6_container">
+      <img src="images/image_5.jpg">
+      <img src="images/image_6.jpg">
+      <img src="images/image_7.jpg">
+      <img src="images/image_8.jpg">
+      <img src="images/image_9.jpg">
+      <img src="images/image_10.jpg">
+    </div>
+
+    <h2>With blur</h2>
+    <div class="wally_5_container">
+      <img src="images/image_5.jpg">
+      <img src="images/image_6.jpg">
+      <img src="images/image_7.jpg">
+      <img src="images/image_8.jpg">
+      <img src="images/image_9.jpg">
+    </div>
+
+    <h2>With blur and overlay</h2>
     <div class="wally_all_container">
       <img src="images/image_1.jpg">
       <img src="images/image_2.jpg">
@@ -24,25 +51,24 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
       <img src="images/image_10.jpg">
     </div>
 
-    <div class="wally_5_container">
-      <img src="images/image_5.jpg">
-      <img src="images/image_6.jpg">
-      <img src="images/image_7.jpg">
-      <img src="images/image_8.jpg">
-      <img src="images/image_9.jpg">
-    </div>
-
-    <div class="wally_3_container">
-      <img src="images/image_8.jpg">
-      <img src="images/image_9.jpg">
-      <img src="images/image_10.jpg">
-    </div>
+  <script src="namespace.js"></script>
+  <script src="wally.js"></script>
+  <script src="helpers.js"></script>
   <script>
     var wallyAll = new Absolventa.Wally('.wally_all_container img');
 
-    var wally5 = new Absolventa.Wally('.wally_5_container img');
+    var wally5 = new Absolventa.Wally('.wally_5_container img', {
+      overlay : false
+    });
 
-    var wally3 = new Absolventa.Wally('.wally_3_container img');
+    var wally6 = new Absolventa.Wally('.wally_6_container img', {
+      blur : false
+    });
+
+    var wally3 = new Absolventa.Wally('.wally_3_container img', {
+      overlay : false,
+      blur: false
+    });
   </script>
   </body>
 </html>

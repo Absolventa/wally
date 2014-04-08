@@ -15,7 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
         'bower_components/jquery/dist/jquery.min.js',
-        {pattern: 'src/images/*.jpg', watched: false, included: false, served: true},
+        {pattern: 'src/images/*.*', watched: false, included: false, served: true},
         'src/namespace.js',
         'src/wally.js',
         'src/helpers.js',
