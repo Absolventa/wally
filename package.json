@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "gulp": "",
+    "gulp-util": "",
+    "gulp-jshint": "",
+    "gulp-uglify": "",
+    "gulp-concat": "",
+    "jshint-stylish": ""
+  },
+  "devDependencies": {
+    "gulp-watch": "~0.5.0",
+    "gulp-karma": "0.0.2",
+    "gulp-livereload": "~1.2.0",
+    "karma-coverage": "~0.1"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/karma start --single-run"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "wally",
+  "version": "0.0.1",
+  "authors": [
+    "Alex Gieche <alex.gieche@gmail.com>"
+  ],
+  "main": "src/wally.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "spec",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.1.0"
+  }
+}
