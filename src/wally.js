@@ -9,15 +9,16 @@
         var _defaultConfig;
 
         _defaultConfig = {
-            containerHeight: 350,
+            containerHeight: 450,
             containerCssClassName : 'wally_container',
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
-            scrollingSpeed : 50,
+            scrollingSpeed : 0.7,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
-            blur : true,
+            blur : false,
+            scrollAnimation : true,
             beforeMount : function(element) {
 
             },
