@@ -294,6 +294,8 @@
 
     Absolventa.Wally.prototype._startAnimation = function() {
         if (this.config.scrollAnimation) {
+            // TODO: Use different animation methods for different browsers
+            // Chrome performs better with css transitions, firefox with rAF
             this._startAnimationViaRequestAnimationFrame();
             // this._startAnimationViaCssTransition();
         }
