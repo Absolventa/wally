@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="
+https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
+    <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>-->
+    <style>
+      .wally_container {
+        margin-bottom: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Raw images</h2>
+    <div class="wally_container">
+      <img src="images/image_1.jpg">
+      <img src="images/image_2.jpg">
+      <img src="images/image_3.jpg">
+      <img src="images/image_4.jpg">
+      <img src="images/image_5.jpg">
+      <img src="images/image_6.jpg">
+      <img src="images/image_7.jpg">
+      <img src="images/image_8.jpg">
+      <img src="images/image_9.jpg">
+      <img src="images/image_10.jpg">
+    </div>
+
+  <script src="namespace.js"></script>
+  <script src="wally.js"></script>
+  <script src="helpers.js"></script>
+  <script>
+    var wally = new Absolventa.Wally('.wally_container img', {
+      overlay : true,
+      blur: true,
+      containerHeight : 400
+    });
+  </script>
+  </body>
+</html>
