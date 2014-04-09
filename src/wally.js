@@ -228,6 +228,7 @@
         overlayElement.style.position = 'absolute';
         overlayElement.style.backgroundColor = this.config.overlayColor;
         overlayElement.style.opacity = this.config.overlayOpacity;
+        overlayElement.style.filter = 'alpha(opacity=' + this.config.overlayOpacity * 100 + ')'
 
         return overlayElement;
     };
