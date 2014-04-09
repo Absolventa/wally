@@ -15,7 +15,7 @@
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
             cloneCssClassName : 'wally_clone_images',
-            scrollingSpeed : 2,
+            scrollingSpeed : 1,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
