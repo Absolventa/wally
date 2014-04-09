@@ -70,7 +70,7 @@ describe("Wally", function() {
 
     it("mounts images with selector", function() {
         var wally = new Absolventa.Wally('.wally_image');
-        expect(wally.images.length).toEqual(5);
+        expect(wally.elements.length).toEqual(5);
     });
 
     it("creates a container element", function() {

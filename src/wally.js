@@ -9,11 +9,13 @@
         var _defaultConfig;
 
         _defaultConfig = {
-            containerHeight: 450,
+            containerHeight: 200,
+            marginBetweenElements : 0,
             containerCssClassName : 'wally_container',
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
-            scrollingSpeed : 0.7,
+            cloneCssClassName : 'wally_clone_images',
+            scrollingSpeed : 2,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
@@ -27,10 +29,13 @@
             }
         };
 
+        this.elements = [];
         this.images = [];
         this.container = undefined;
         this.imageWrapper = undefined;
         this.animationInterval = undefined;
+        this.necessaryClones = 0;
+        this.singleWrapperWidth = 0;
 
         // first argument is possibly a config object
         if (Object.prototype.toString.call(selector) === '[object Object]') {
@@ -39,20 +44,21 @@
             this.config = Absolventa.Wally.Helpers.createConfigObject(config, _defaultConfig);
         }
 
+        this._addRequestAnimationPolyfill();
+
         // first argument is possibly a css selector string
         if (typeof selector === 'string') {
             this._mountElements(selector);
-            this._startAnimation();
         }
     };
 
     Absolventa.Wally.prototype._mountContainer = function() {
         var container,
             targetElement,
-            imageWrapper;
+            i;
 
-        if (!this.container) {
-            targetElement = this.images[0].parentNode;
+        if (!this.container && this.elements.length > 0) {
+            targetElement = this.elements[0].parentNode;
             container = this._createContainer();
 
             this._styleImages();
@@ -65,9 +71,31 @@
             // we set width of image wrapper, when images are appended to the dom
             this._styleImageWrapper(this.imageWrapper);
 
+            this._startAnimation();
+
+            for (i = 0; i < this.necessaryClones; i += 1) {
+                this._mountImageWrapperClone();
+            }
+
             // invoke after-callback
             this.config.afterMount(container);
         }
+    };
+
+    Absolventa.Wally.prototype._mountImageWrapperClone = function() {
+        var clone = this.imageWrapper.cloneNode(true);
+
+        clone.className = clone.className + ' ' + this.config.cloneCssClassName;
+
+        clone.style.position = 'relative';
+        clone.style.left = 0;
+        clone.style.top = 0;
+        clone.style.display = 'inline-block';
+        clone.style.width = 'auto';
+        clone.style.cssFloat = 'left';
+        clone.style.styleFloat = 'left'; // IE
+
+        this.imageWrapper.appendChild(clone);
     };
 
     Absolventa.Wally.prototype._createContainer = function() {
@@ -81,6 +109,7 @@
             imageWrapper = this._createImageWrapper();
             container.appendChild(imageWrapper);
             if (this.config.overlay) {
+                // TODO: Check if opacity is supported. Otherwise, older browsers would hide the images with the overlay
                 overlay = document.createElement('div');
                 overlay.className = this.config.overlayCssClassName;
                 overlay = this._styleOverlay(overlay);
@@ -96,14 +125,15 @@
     Absolventa.Wally.prototype._createImageWrapper = function() {
         var imageWrapper,
             i,
-            imagesLength = this.images.length;
+            imagesLength = this.elements.length;
 
         // Only create a wrapper, if necessary
         if (!this.imageWrapper) {
             imageWrapper = document.createElement('div');
             imageWrapper.className = this.config.imageWrapperCssClassName;
             for (i = 0; i < imagesLength; i += 1) {
-                imageWrapper.appendChild(this._styleImage(this.images[i]));
+                this._styleImage(this.elements[i].wallyImageElement);
+                imageWrapper.appendChild(this.elements[i]);
             }
             imageWrapper = this._styleImageWrapper(imageWrapper);
 
@@ -117,28 +147,51 @@
         var i,
             imagesLength = this.images.length,
             wrapperWidth = 0,
-            imageWidth;
+            imageWidth = 0,
+            necessaryClones = 1;
 
         for (i = 0; i < imagesLength; i += 1) {
-            imageWidth = Math.round(this.images[i].width / this.images[i].height * parseInt(this.images[i].style.height, 10));
+            //imageWidth = (this.images[i].offsetWidth / this.images[i].offsetHeight * parseInt(this.images[i].style.height, 10));
+            imageWidth = parseInt(this.images[i].style.width.replace('px', ''), 10);
+
+            imageWidth += this.config.marginBetweenElements;
 
             wrapperWidth += imageWidth;
         }
 
+        // Manual fix for wrong image dimension rounding
+        // wrapperWidth = wrapperWidth + (this.images.length + 1);
+
+        this.singleWrapperWidth = wrapperWidth;
+
+        wrapperWidth += wrapperWidth;
+
+        while (wrapperWidth <= screen.width) {
+            necessaryClones += 1;
+            wrapperWidth += wrapperWidth;
+        }
+
+        this.necessaryClones = necessaryClones;
+
         return wrapperWidth;
     };
 
-    Absolventa.Wally.prototype._styleImage = function(imageElement) {
-        imageElement.style.float = 'left';
-        imageElement.style.height = this.config.containerHeight + 'px';
+    Absolventa.Wally.prototype._styleImage = function(element) {
+        element.style.cssFloat = 'left';
+        element.style.styleFloat = 'left'; // IE
+        element.style.height = this.config.containerHeight + 'px';
+        element.style.marginRight = this.config.marginBetweenElements + 'px';
 
-        return imageElement;
+        element.style.width = element.width / element.height * this.config.containerHeight + 'px';
+
+        return element;
     };
 
     Absolventa.Wally.prototype._styleImageWrapper = function(wrapperElement) {
         var targetWidth = this._getNecessaryWrapperWidth();
+
         if (targetWidth) {
-            wrapperElement.style.width = this._getNecessaryWrapperWidth() + 'px';
+            wrapperElement.style.width = targetWidth + 'px';
         }
         wrapperElement.style.height = this.config.containerHeight + 'px';
         wrapperElement.style.overflowY = 'hidden';
@@ -157,7 +210,7 @@
                 this.images[i].style.filter = 'url(images/blur.svg#blur)';
             }
         }
-    }
+    };
 
     Absolventa.Wally.prototype._styleContainer = function(containerElement) {
         containerElement.style.height = this.config.containerHeight + 'px';
@@ -218,21 +271,101 @@
 
         if (elementsLength > 0) {
             for (i = 0; i < elementsLength; i += 1) {
-                this.images.push(elements[i]);
+                this.elements.push(elements[i]);
+                this._mountImage(elements[i]);
             }
         }
     };
 
+    Absolventa.Wally.prototype._mountImage = function(element, parentElement) {
+        if (!parentElement) {
+            parentElement = element;
+        }
+
+        if (element.nodeName === 'IMG') {
+            this.images.push(element);
+            element.wallyParentElement = parentElement;
+            parentElement.wallyImageElement = element;
+        } else {
+            this._mountImage(element.childNodes[0], parentElement);
+        }
+    };
+
     Absolventa.Wally.prototype._startAnimation = function() {
-        var scrollDistance = this._getNecessaryWrapperWidth(),
-            distancePassed = 0,
+        if (this.config.scrollAnimation) {
+            this._startAnimationViaRequestAnimationFrame();
+            // this._startAnimationViaCssTransition();
+        }
+    };
+
+    Absolventa.Wally.prototype._startAnimationViaCssTransition = function() {
+        var element = this.imageWrapper,
+            property = 'Transition',
+            value = "left 120s linear",
+            distanceToScroll = this._getNecessaryWrapperWidth(),
             that = this,
             boundAnimation = function() {
-                that.imageWrapper.style.left = -distancePassed + 'px';
-                distancePassed += 1;
+                that.imageWrapper.style.left = -distanceToScroll + 'px';
             };
 
-        this.animationInterval = setInterval(boundAnimation, this.config.scrollingSpeed);
+        element.style["Webkit" + property] = value;
+        element.style["Moz" + property] = value;
+        element.style["ms" + property] = value;
+        element.style["O" + property] = value;
+        element.style.left = 0;
+
+        setTimeout(boundAnimation, 1);
+    };
+
+    Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {
+        var distancePassed = 0,
+            imageWrapper = this.imageWrapper,
+            scrollingSpeed = this.config.scrollingSpeed,
+            that = this;
+
+        function animation() {
+            distancePassed += scrollingSpeed;
+            imageWrapper.style.left = -distancePassed + "px";
+            if (distancePassed >= that.singleWrapperWidth - 1) {
+                distancePassed = 0;
+            }
+            window.requestAnimationFrame(animation);
+        }
+        window.requestAnimationFrame(animation);
+    };
+
+    Absolventa.Wally.prototype._addRequestAnimationPolyfill = function() {
+        // rAF polyfill via http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+        var lastTime = 0,
+            vendors = ['webkit', 'moz'],
+            x,
+            vendorsLength = vendors.length;
+
+        for (x = 0; x < vendorsLength && !window.requestAnimationFrame; x += 1) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback) {
+                var currTime = new Date().getTime(),
+                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+                    id = window.setTimeout(function() {
+                        callback(currTime + timeToCall);
+                    }, timeToCall);
+
+                lastTime = currTime + timeToCall;
+
+                return id;
+            };
+        }
+
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+        }
     };
 
 }());
