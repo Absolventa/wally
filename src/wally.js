@@ -15,7 +15,7 @@
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
             cloneCssClassName : 'wally_clone_images',
-            scrollingSpeed : 1,
+            scrollingSpeed : 100,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
@@ -293,37 +293,53 @@
     };
 
     Absolventa.Wally.prototype._startAnimation = function() {
+        var that = this;
         if (this.config.scrollAnimation) {
-            // TODO: Use different animation methods for different browsers
-            // Chrome performs better with css transitions, firefox with rAF
-            this._startAnimationViaRequestAnimationFrame();
-            // this._startAnimationViaCssTransition();
+            if (window.chrome) {
+                this._startAnimationViaCssTransition();
+                this.imageWrapper.addEventListener('webkitTransitionEnd', function() {
+                    that._startAnimationViaCssTransition();
+                });
+            } else {
+                this._startAnimationViaRequestAnimationFrame();
+            }
         }
     };
 
     Absolventa.Wally.prototype._startAnimationViaCssTransition = function() {
         var element = this.imageWrapper,
-            property = 'Transition',
-            value = "left 120s linear",
-            distanceToScroll = this._getNecessaryWrapperWidth(),
             that = this,
+            seconds = that._convertScrollingSpeedToSeconds(that.scrollingSpeed, that.singleWrapperWidth),
+            distanceToScroll = this.singleWrapperWidth - 1,
             boundAnimation = function() {
                 that.imageWrapper.style.left = -distanceToScroll + 'px';
             };
 
+        // reset to initial position
+        that._setPrefixes(element, 'Transition', 'none');
+        element.style.left = 0;
+
+        // set css transition on element
+        setTimeout(function() {
+            that._setPrefixes(element, 'Transition', 'left ' + seconds + 's linear');
+        }, 1);
+
+        // trigger css transition
+        setTimeout(boundAnimation, 5);
+    };
+
+    Absolventa.Wally.prototype._setPrefixes = function(element, property, value) {
         element.style["Webkit" + property] = value;
         element.style["Moz" + property] = value;
         element.style["ms" + property] = value;
         element.style["O" + property] = value;
-        element.style.left = 0;
-
-        setTimeout(boundAnimation, 1);
+        element.style[property] = value;
     };
 
     Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {
         var distancePassed = 0,
             imageWrapper = this.imageWrapper,
-            scrollingSpeed = this.config.scrollingSpeed,
+            scrollingSpeed = this.config.scrollingSpeed / 100,
             that = this;
 
         function animation() {
@@ -335,6 +351,13 @@
             window.requestAnimationFrame(animation);
         }
         window.requestAnimationFrame(animation);
+    };
+
+    Absolventa.Wally.prototype._convertScrollingSpeedToSeconds = function() {
+        var pixelsPerSecond = (this.config.scrollingSpeed / 100) / 2.5,
+            seconds = (1 / pixelsPerSecond * this.singleWrapperWidth);
+
+        return seconds / 100;
     };
 
     Absolventa.Wally.prototype._addRequestAnimationPolyfill = function() {
