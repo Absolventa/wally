@@ -71,7 +71,9 @@
             // we set width of image wrapper, when images are appended to the dom
             this._styleImageWrapper(this.imageWrapper);
 
-            this._startAnimation();
+            if (this.config.scrollAnimation) {
+                this._startAnimation();
+            }
 
             for (i = 0; i < this.necessaryClones; i += 1) {
                 this._mountImageWrapperClone();
@@ -293,15 +295,14 @@
 
     Absolventa.Wally.prototype._startAnimation = function() {
         var that = this;
-        if (this.config.scrollAnimation) {
-            if (window.chrome) {
-                this._startAnimationViaCssTransition();
-                this.imageWrapper.addEventListener('webkitTransitionEnd', function() {
-                    that._startAnimationViaCssTransition();
-                });
-            } else {
-                this._startAnimationViaRequestAnimationFrame();
-            }
+
+        if (window.chrome) {
+            this._startAnimationViaCssTransition();
+            this.imageWrapper.addEventListener('webkitTransitionEnd', function() {
+                that._startAnimationViaCssTransition();
+            });
+        } else {
+            this._startAnimationViaRequestAnimationFrame();
         }
     };
 
