@@ -84,7 +84,7 @@ describe("Wally", function() {
         var wally = new Absolventa.Wally('.wally_image'),
             wrapper = document.getElementsByClassName(wally.config.imageWrapperCssClassName);
 
-        expect(wrapper.length).toEqual(1);
+        expect(wrapper.length).toBeTruthy();
     });
 
     it("has a beforeMount callback", function() {
