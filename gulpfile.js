@@ -9,7 +9,6 @@ var livereload = require('gulp-livereload');
 
 var testFiles = [
     'bower_components/jquery/dist/jquery.min.js',
-    'src/images/blur.svg',
     'src/namespace.js',
     'src/wally.js',
     'src/helpers.js',
