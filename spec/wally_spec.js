@@ -73,6 +73,20 @@ describe("Wally", function() {
         expect(wally.elements.length).toEqual(5);
     });
 
+    it("sorts child images into images array", function() {
+        var wally;
+        $('#fixtures').append('<a href="#" id="my-image-link" class="wally_image"><img src="/base/src/images/image_1000.jpg"></a>');
+        wally = new Absolventa.Wally('.wally_image');
+        expect(wally.images[wally.images.length - 1].src).toContain('/base/src/images/image_1000.jpg');
+    });
+
+    it("sorts parent elements of child images into elements array", function() {
+        var wally;
+        $('#fixtures').append('<a href="#" id="my-image-link" class="wally_image"><img src="/base/src/images/image_1000.jpg"></a>');
+        wally = new Absolventa.Wally('.wally_image');
+        expect(wally.elements[wally.elements.length - 1].id).toEqual('my-image-link');
+    });
+
     it("creates a container element", function() {
         var wally = new Absolventa.Wally('.wally_image'),
             container = document.getElementsByClassName(wally.config.containerCssClassName);
