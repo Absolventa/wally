@@ -109,7 +109,6 @@
             imageWrapper = this._createImageWrapper();
             container.appendChild(imageWrapper);
             if (this.config.overlay) {
-                // TODO: Check if opacity is supported. Otherwise, older browsers would hide the images with the overlay
                 overlay = document.createElement('div');
                 overlay.className = this.config.overlayCssClassName;
                 overlay = this._styleOverlay(overlay);
@@ -228,7 +227,7 @@
         overlayElement.style.position = 'absolute';
         overlayElement.style.backgroundColor = this.config.overlayColor;
         overlayElement.style.opacity = this.config.overlayOpacity;
-        overlayElement.style.filter = 'alpha(opacity=' + this.config.overlayOpacity * 100 + ')'
+        overlayElement.style.filter = 'alpha(opacity=' + this.config.overlayOpacity * 100 + ')';
 
         return overlayElement;
     };
