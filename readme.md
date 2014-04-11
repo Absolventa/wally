@@ -1,5 +1,7 @@
 # wally.js
 
+[![Code Climate](https://codeclimate.com/github/Absolventa/wally.png)](https://codeclimate.com/github/Absolventa/wally)
+
 A lightweight javascript plugin for interactive image walls.
 
 ##Demo
