@@ -190,4 +190,24 @@
         return hexString.length === 1 ? '0' + hexString : hexString;
     };
 
+    Absolventa.Wally.Helpers._generateSelectorStringArray = function(selector) {
+        var selectors = [];
+
+        // check for param availability
+        if (selector !== undefined) {
+
+            // convert to array, if param is a string
+            if (typeof selector === 'string') {
+                selectors.push(selector);
+            }
+
+            // is param an array?
+            if (Object.prototype.toString.call(selector) === '[object Array]') {
+                selectors = selectors.concat(selector);
+            }
+        }
+
+        return selectors;
+    };
+
 }());

@@ -293,7 +293,7 @@
     };
 
     Absolventa.Wally.prototype._mountElements = function(selector) {
-        var selectors = this._generateSelectorStringArray(selector),
+        var selectors = Absolventa.Wally.Helpers._generateSelectorStringArray(selector),
             i,
             selectorsLength = selectors.length;
 
@@ -302,26 +302,6 @@
         }
 
         this._mountContainer();
-    };
-
-    Absolventa.Wally.prototype._generateSelectorStringArray = function(selector) {
-        var selectors = [];
-
-        // check for param availability
-        if (selector !== undefined) {
-
-            // convert to array, if param is a string
-            if (typeof selector === 'string') {
-                selectors.push(selector);
-            }
-
-            // is param an array?
-            if (Object.prototype.toString.call(selector) === '[object Array]') {
-                selectors = selectors.concat(selector);
-            }
-        }
-
-        return selectors;
     };
 
     Absolventa.Wally.prototype._mountElement = function(selectorString) {
