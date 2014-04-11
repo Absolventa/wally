@@ -28,11 +28,11 @@
             filterColoringMethod : 'sepia', // 'sepia' or 'grayscale'
             scrollAnimation : true,
             scrollAnimationStoppable : true,
-            beforeMount : function(element) {
-
+            beforeMount : function() {
+                // callback
             },
-            afterMount : function(element) {
-
+            afterMount : function() {
+                // callback
             }
         };
 
@@ -54,7 +54,7 @@
             this.config = Absolventa.Wally.Helpers.createConfigObject(config, _defaultConfig);
         }
 
-        this._addRequestAnimationPolyfill();
+        Absolventa.Wally.Helpers._addRequestAnimationPolyfill();
 
         // first argument is possibly a css selector string
         if (typeof selector === 'string') {
@@ -79,7 +79,7 @@
             targetElement.appendChild(container);
 
             // we set width of image wrapper, when images are appended to the dom
-            this._styleImageWrapper(this.imageWrapper);
+            Absolventa.Wally.Styler.styleImageWrapper(this.imageWrapper, this._getNecessaryWrapperWidth(), this.config);
 
             if (this.config.scrollAnimation) {
                 this._startAnimation();
@@ -127,7 +127,7 @@
                 overlay = this._createOverlay();
                 container.appendChild(overlay);
             }
-            container = this._styleContainer(container);
+            container = Absolventa.Wally.Styler.styleContainer(container, this.config);
             this.container = container;
         }
 
@@ -139,7 +139,7 @@
 
         overlay = document.createElement('div');
         overlay.className = this.config.overlayCssClassName;
-        overlay = this._styleOverlay(overlay);
+        overlay = Absolventa.Wally.Styler.styleOverlay(overlay, this.config);
 
         return overlay;
     };
@@ -154,10 +154,10 @@
             imageWrapper = document.createElement('div');
             imageWrapper.className = this.config.imageWrapperCssClassName;
             for (i = 0; i < imagesLength; i += 1) {
-                this._styleImage(this.elements[i].wallyImageElement);
+                Absolventa.Wally.Styler.styleImage(this.elements[i].wallyImageElement, this.config);
                 imageWrapper.appendChild(this.elements[i]);
             }
-            imageWrapper = this._styleImageWrapper(imageWrapper);
+            imageWrapper = Absolventa.Wally.Styler.styleImageWrapper(imageWrapper, this._getNecessaryWrapperWidth(), this.config);
 
             this.imageWrapper = imageWrapper;
 
@@ -173,16 +173,12 @@
             necessaryClones = 1;
 
         for (i = 0; i < imagesLength; i += 1) {
-            //imageWidth = (this.images[i].offsetWidth / this.images[i].offsetHeight * parseInt(this.images[i].style.height, 10));
             imageWidth = parseInt(this.images[i].style.width.replace('px', ''), 10);
 
             imageWidth += this.config.marginBetweenElements;
 
             wrapperWidth += imageWidth;
         }
-
-        // Manual fix for wrong image dimension rounding
-        // wrapperWidth = wrapperWidth + (this.images.length + 1);
 
         this.singleWrapperWidth = wrapperWidth;
 
@@ -198,30 +194,6 @@
         return wrapperWidth;
     };
 
-    Absolventa.Wally.prototype._styleImage = function(element) {
-        element.style.cssFloat = 'left';
-        element.style.styleFloat = 'left'; // IE
-        element.style.height = this.config.containerHeight + 'px';
-        element.style.marginRight = this.config.marginBetweenElements + 'px';
-
-        element.style.width = element.width / element.height * this.config.containerHeight + 'px';
-
-        return element;
-    };
-
-    Absolventa.Wally.prototype._styleImageWrapper = function(wrapperElement) {
-        var targetWidth = this._getNecessaryWrapperWidth();
-
-        if (targetWidth) {
-            wrapperElement.style.width = targetWidth + 'px';
-        }
-        wrapperElement.style.height = this.config.containerHeight + 'px';
-        wrapperElement.style.overflowY = 'hidden';
-        wrapperElement.style.position = 'absolute';
-
-        return wrapperElement;
-    };
-
     Absolventa.Wally.prototype._styleImages = function() {
         var i,
             imagesLength = this.images.length;
@@ -229,75 +201,14 @@
         for (i = 0; i < imagesLength; i += 1) {
             if (this.config.filterBlur || this.config.filterColoring) {
                 // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
-                this.images[i].style.WebkitFilter = this._getWebkitFilterString();
-                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + this._getSvgFilterId() + ')';
+                this.images[i].style.WebkitFilter = Absolventa.Wally.Styler.getWebkitFilterString(this.config);
+                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + Absolventa.Wally.Styler.getSvgFilterId(this.config) + ')';
             }
         }
-    };
-
-    Absolventa.Wally.prototype._getWebkitFilterString = function() {
-        var webkitFilterString = '';
-
-        if (this.config.filterBlur) {
-            webkitFilterString += ' blur(5px)';
-        }
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
-            webkitFilterString += ' grayscale(100%)';
-        }
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
-            webkitFilterString += ' sepia(100%)';
-        }
-
-        return webkitFilterString;
-    };
-
-    Absolventa.Wally.prototype._getSvgFilterId = function() {
-        var svgFilterId = '';
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale' && this.config.filterBlur) {
-            svgFilterId = '#grayscale_blur';
-        } else if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia' && this.config.filterBlur) {
-            svgFilterId = '#sepia_blur';
-        } else {
-            if (this.config.filterBlur) {
-                svgFilterId = '#blur';
-            }
-            if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
-                svgFilterId = '#grayscale';
-            }
-            if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
-                svgFilterId = '#sepia';
-            }
-        }
-
-        return svgFilterId;
-    };
-
-    Absolventa.Wally.prototype._styleContainer = function(containerElement) {
-        containerElement.style.height = this.config.containerHeight + 'px';
-        containerElement.style.width = 'auto';
-        containerElement.style.overflowX = 'hidden';
-        containerElement.style.position = 'relative';
-
-
-        return containerElement;
-    };
-
-    Absolventa.Wally.prototype._styleOverlay = function(overlayElement) {
-        overlayElement.style.height = this.config.containerHeight;
-        overlayElement.style.width = '100%';
-        overlayElement.style.position = 'absolute';
-        overlayElement.style.backgroundColor = this.config.overlayColor;
-        overlayElement.style.opacity = this.config.overlayOpacity;
-        overlayElement.style.filter = 'alpha(opacity=' + this.config.overlayOpacity * 100 + ')';
-
-        return overlayElement;
     };
 
     Absolventa.Wally.prototype._mountElements = function(selector) {
-        var selectors = this._generateSelectorStringArray(selector),
+        var selectors = Absolventa.Wally.Helpers._generateSelectorStringArray(selector),
             i,
             selectorsLength = selectors.length;
 
@@ -306,26 +217,6 @@
         }
 
         this._mountContainer();
-    };
-
-    Absolventa.Wally.prototype._generateSelectorStringArray = function(selector) {
-        var selectors = [];
-
-        // check for param availability
-        if (selector !== undefined) {
-
-            // convert to array, if param is a string
-            if (typeof selector === 'string') {
-                selectors.push(selector);
-            }
-
-            // is param an array?
-            if (Object.prototype.toString.call(selector) === '[object Array]') {
-                selectors = selectors.concat(selector);
-            }
-        }
-
-        return selectors;
     };
 
     Absolventa.Wally.prototype._mountElement = function(selectorString) {
@@ -406,42 +297,6 @@
         }
     };
 
-    Absolventa.Wally.prototype._startAnimationViaCssTransition = function(animationManuallyPaused) {
-        var element = this.imageWrapper,
-            that = this,
-            seconds = that._convertScrollingSpeedToSeconds(that.scrollingSpeed, that.singleWrapperWidth),
-            boundAnimation = function() {
-                that.imageWrapper.style.left = -that.distanceToScroll + 'px';
-            };
-
-        if (this.distanceToScroll === undefined) {
-            this.distanceToScroll = this.singleWrapperWidth - 1;
-        }
-
-        if (!animationManuallyPaused) {
-            // reset to initial position
-            this._setPrefixes(element, 'Transition', 'none');
-            element.style.left = 0;
-        }
-
-
-        // set css transition on element
-        setTimeout(function() {
-            that._setPrefixes(element, 'Transition', 'left ' + seconds + 's linear');
-        }, 1);
-
-        // trigger css transition
-        setTimeout(boundAnimation, 5);
-    };
-
-    Absolventa.Wally.prototype._setPrefixes = function(element, property, value) {
-        element.style["Webkit" + property] = value;
-        element.style["Moz" + property] = value;
-        element.style["ms" + property] = value;
-        element.style["O" + property] = value;
-        element.style[property] = value;
-    };
-
     Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {
         var imageWrapper = this.imageWrapper,
             scrollingSpeed = this.config.scrollingSpeed / 100,
@@ -468,40 +323,6 @@
             seconds = (1 / pixelsPerSecond * this.singleWrapperWidth);
 
         return seconds / 100;
-    };
-
-    Absolventa.Wally.prototype._addRequestAnimationPolyfill = function() {
-        // rAF polyfill via http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
-
-        var lastTime = 0,
-            vendors = ['webkit', 'moz'],
-            x,
-            vendorsLength = vendors.length;
-
-        for (x = 0; x < vendorsLength && !window.requestAnimationFrame; x += 1) {
-            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-        }
-
-        if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function(callback) {
-                var currTime = new Date().getTime(),
-                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-                    id = window.setTimeout(function() {
-                        callback(currTime + timeToCall);
-                    }, timeToCall);
-
-                lastTime = currTime + timeToCall;
-
-                return id;
-            };
-        }
-
-        if (!window.cancelAnimationFrame) {
-            window.cancelAnimationFrame = function(id) {
-                clearTimeout(id);
-            };
-        }
     };
 
 }());
@@ -696,6 +517,161 @@
 
     Absolventa.Wally.Helpers.addLeadingZeroToHexString = function(hexString) {
         return hexString.length === 1 ? '0' + hexString : hexString;
+    };
+
+    Absolventa.Wally.Helpers._generateSelectorStringArray = function(selector) {
+        var selectors = [];
+
+        // check for param availability
+        if (selector !== undefined) {
+
+            // convert to array, if param is a string
+            if (typeof selector === 'string') {
+                selectors.push(selector);
+            }
+
+            // is param an array?
+            if (Object.prototype.toString.call(selector) === '[object Array]') {
+                selectors = selectors.concat(selector);
+            }
+        }
+
+        return selectors;
+    };
+
+    Absolventa.Wally.Helpers._setPrefixes = function(element, property, value) {
+        element.style["Webkit" + property] = value;
+        element.style["Moz" + property] = value;
+        element.style["ms" + property] = value;
+        element.style["O" + property] = value;
+        element.style[property] = value;
+    };
+
+    Absolventa.Wally.Helpers._addRequestAnimationPolyfill = function() {
+        // rAF polyfill via http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+        var lastTime = 0,
+            vendors = ['webkit', 'moz'],
+            x,
+            vendorsLength = vendors.length;
+
+        for (x = 0; x < vendorsLength && !window.requestAnimationFrame; x += 1) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback) {
+                var currTime = new Date().getTime(),
+                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+                    id = window.setTimeout(function() {
+                        callback(currTime + timeToCall);
+                    }, timeToCall);
+
+                lastTime = currTime + timeToCall;
+
+                return id;
+            };
+        }
+
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+        }
+    };
+
+}());
+
+(function() {
+    'use strict';
+
+    // Set namespace if necessary
+    var Absolventa = window.Absolventa || {};
+    Absolventa.Wally = Absolventa.Wally || {};
+
+    Absolventa.Wally.Styler = {};
+
+    Absolventa.Wally.Styler.styleImage = function(element, config) {
+        element.style.cssFloat = 'left';
+        element.style.styleFloat = 'left'; // IE
+        element.style.height = config.containerHeight + 'px';
+        element.style.marginRight = config.marginBetweenElements + 'px';
+
+        element.style.width = element.width / element.height * config.containerHeight + 'px';
+
+        return element;
+    };
+
+    Absolventa.Wally.Styler.styleImageWrapper = function(wrapperElement, targetWidth, config) {
+        if (targetWidth) {
+            wrapperElement.style.width = targetWidth + 'px';
+        }
+        wrapperElement.style.height = config.containerHeight + 'px';
+        wrapperElement.style.overflowY = 'hidden';
+        wrapperElement.style.position = 'absolute';
+
+        return wrapperElement;
+    };
+
+    Absolventa.Wally.Styler.styleContainer = function(containerElement, config) {
+        containerElement.style.height = config.containerHeight + 'px';
+        containerElement.style.width = 'auto';
+        containerElement.style.overflowX = 'hidden';
+        containerElement.style.position = 'relative';
+
+        return containerElement;
+    };
+
+    Absolventa.Wally.Styler.styleOverlay = function(overlayElement, config) {
+        overlayElement.style.height = config.containerHeight;
+        overlayElement.style.width = '100%';
+        overlayElement.style.position = 'absolute';
+        overlayElement.style.backgroundColor = config.overlayColor;
+        overlayElement.style.opacity = config.overlayOpacity;
+        overlayElement.style.filter = 'alpha(opacity=' + config.overlayOpacity * 100 + ')';
+
+        return overlayElement;
+    };
+
+    Absolventa.Wally.Styler.getWebkitFilterString = function(config) {
+        var webkitFilterString = '';
+
+        if (config.filterBlur) {
+            webkitFilterString += ' blur(5px)';
+        }
+
+        if (config.filterColoring && config.filterColoringMethod === 'grayscale') {
+            webkitFilterString += ' grayscale(100%)';
+        }
+
+        if (config.filterColoring && config.filterColoringMethod === 'sepia') {
+            webkitFilterString += ' sepia(100%)';
+        }
+
+        return webkitFilterString;
+    };
+
+    Absolventa.Wally.Styler.getSvgFilterId = function(config) {
+        var svgFilterId = '';
+
+        if (config.filterColoring && config.filterColoringMethod === 'grayscale' && config.filterBlur) {
+            svgFilterId = '#grayscale_blur';
+        } else if (config.filterColoring && config.filterColoringMethod === 'sepia' && config.filterBlur) {
+            svgFilterId = '#sepia_blur';
+        } else {
+            if (config.filterBlur) {
+                svgFilterId = '#blur';
+            }
+            if (config.filterColoring && config.filterColoringMethod === 'grayscale') {
+                svgFilterId = '#grayscale';
+            }
+            if (config.filterColoring && config.filterColoringMethod === 'sepia') {
+                svgFilterId = '#sepia';
+            }
+        }
+
+        return svgFilterId;
     };
 
 }());
