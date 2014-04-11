@@ -30,10 +30,6 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
       a {
         color: #0D596B;
       }
-      .wally_clone_images {
-        background-color: red;
-        padding-bottom: 1px;
-      }
       img {
         opacity: 50%;
       }
@@ -50,7 +46,6 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
         line-height: 200px;
         text-align: center;
       }
-
     </style>
   </head>
   <body>
@@ -90,13 +85,16 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
 
       var wally6 = new Absolventa.Wally('.wally_6_container img', {
         containerHeight : 200,
-        scrollingSpeed : 250
+        scrollingSpeed : 250,
       });
 
       var wally3 = new Absolventa.Wally('.wally_3_container img', {
-        overlayColor : 'orange',
-        overlayOpacity : 0.6,
-        containerHeight : 50
+        filterColoring : true,
+        filterColoringMethod : 'grayscale',
+        overlay: true,
+        containerHeight : 50,
+        scrollingSpeed : 125
+
       });
     </script>
   </body>
