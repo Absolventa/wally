@@ -62,6 +62,35 @@ describe("Sticks", function() {
             expect(wally.container).toEqual(wallyContainer);
         });
     });
+
+    describe("animation", function() {
+        it("is started when param is set", function() {
+            spyOn(Absolventa.Wally.prototype, '_startAnimation').andCallThrough();
+            var wally = new Absolventa.Wally('.wally_image', {
+                scrollAnimation : false
+            });
+
+            expect(Absolventa.Wally.prototype._startAnimation).not.toHaveBeenCalled();
+        });
+        it("calls event handler for container hovering when param is set", function() {
+            spyOn(Absolventa.Wally.prototype, '_addEventHandlerForContainerHovering').andCallThrough();
+            var wally = new Absolventa.Wally('.wally_image', {
+                scrollAnimationStoppable : true
+            });
+
+            expect(Absolventa.Wally.prototype._addEventHandlerForContainerHovering).toHaveBeenCalled();
+        });
+
+        it("does not call event handler for container hovering when param is not set", function() {
+            spyOn(Absolventa.Wally.prototype, '_addEventHandlerForContainerHovering').andCallThrough();
+            var wally = new Absolventa.Wally('.wally_image', {
+                scrollAnimationStoppable : false
+            });
+
+            expect(Absolventa.Wally.prototype._addEventHandlerForContainerHovering).not.toHaveBeenCalled();
+        });
+    });
+
     describe("image wrapper", function() {
         it("is not created, if already present", function() {
             var wally = new Absolventa.Wally('.wally_image');
