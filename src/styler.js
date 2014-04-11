@@ -29,6 +29,15 @@
         return wrapperElement;
     };
 
+    Absolventa.Wally.Styler.styleContainer = function(containerElement, config) {
+        containerElement.style.height = config.containerHeight + 'px';
+        containerElement.style.width = 'auto';
+        containerElement.style.overflowX = 'hidden';
+        containerElement.style.position = 'relative';
+
+        return containerElement;
+    };
+
     Absolventa.Wally.Styler.getWebkitFilterString = function(config) {
         var webkitFilterString = '';
 
