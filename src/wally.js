@@ -173,7 +173,7 @@
 
         wrapperWidth += wrapperWidth;
 
-        while (wrapperWidth <= screen.width) {
+        while (wrapperWidth <= 2 * screen.width) {
             necessaryClones += 1;
             wrapperWidth += wrapperWidth;
         }
