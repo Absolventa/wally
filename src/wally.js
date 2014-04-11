@@ -9,13 +9,13 @@
         var _defaultConfig;
 
         _defaultConfig = {
-            containerHeight: 200,
+            containerHeight: 500,
             marginBetweenElements : 0,
             containerCssClassName : 'wally_container',
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
             cloneCssClassName : 'wally_clone_images',
-            scrollingSpeed : 100,
+            scrollingSpeed : 200,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
