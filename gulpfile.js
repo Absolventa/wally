@@ -17,7 +17,6 @@ var testFiles = [
 ];
 
 var distJsFiles = [
-    'src/images/blur.svg',
     'src/namespace.js',
     'src/wally.js',
     'src/helpers.js',
