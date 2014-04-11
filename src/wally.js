@@ -24,10 +24,10 @@
             filterColoringMethod : 'sepia', // 'sepia' or 'grayscale'
             scrollAnimation : true,
             scrollAnimationStoppable : true,
-            beforeMount : function(element) {
+            beforeMount : function() {
                 // callback
             },
-            afterMount : function(element) {
+            afterMount : function() {
                 // callback
             }
         };
