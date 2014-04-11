@@ -210,4 +210,12 @@
         return selectors;
     };
 
+    Absolventa.Wally.Helpers._setPrefixes = function(element, property, value) {
+        element.style["Webkit" + property] = value;
+        element.style["Moz" + property] = value;
+        element.style["ms" + property] = value;
+        element.style["O" + property] = value;
+        element.style[property] = value;
+    };
+
 }());

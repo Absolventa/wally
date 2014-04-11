@@ -396,26 +396,18 @@
 
         if (!animationManuallyPaused) {
             // reset to initial position
-            this._setPrefixes(element, 'Transition', 'none');
+            Absolventa.Wally.Helpers._setPrefixes(element, 'Transition', 'none');
             element.style.left = 0;
         }
 
 
         // set css transition on element
         setTimeout(function() {
-            that._setPrefixes(element, 'Transition', 'left ' + seconds + 's linear');
+            Absolventa.Wally.Helpers._setPrefixes(element, 'Transition', 'left ' + seconds + 's linear');
         }, 1);
 
         // trigger css transition
         setTimeout(boundAnimation, 5);
-    };
-
-    Absolventa.Wally.prototype._setPrefixes = function(element, property, value) {
-        element.style["Webkit" + property] = value;
-        element.style["Moz" + property] = value;
-        element.style["ms" + property] = value;
-        element.style["O" + property] = value;
-        element.style[property] = value;
     };
 
     Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {

@@ -17,24 +17,6 @@ describe("Sticks", function() {
         $('#fixtures').remove();
     });
 
-    describe("selector string generation", function() {
-        it("returns empty array for undefined params", function() {
-            var wally = new Absolventa.Wally();
-
-            expect(wally._generateSelectorStringArray()).toEqual([]);
-        });
-        it("converts string to array", function() {
-            var wally = new Absolventa.Wally();
-
-            expect(wally._generateSelectorStringArray('.wally_image')).toEqual(['.wally_image']);
-        });
-        it("converts string to array", function() {
-            var wally = new Absolventa.Wally();
-
-            expect(wally._generateSelectorStringArray(['.wally_image', '.another_wally_image'])).toEqual(['.wally_image', '.another_wally_image']);
-        });
-    });
-
     describe("mounts element", function() {
         it("when an element is given as param", function() {
             var wally = new Absolventa.Wally();

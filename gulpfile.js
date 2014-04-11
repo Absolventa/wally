@@ -13,7 +13,8 @@ var testFiles = [
     'src/wally.js',
     'src/helpers.js',
     'spec/wally_spec.js',
-    'spec/wally_internal_spec.js'
+    'spec/wally_internal_spec.js',
+    'spec/wally_helpers_spec.js'
 ];
 
 var distJsFiles = [
