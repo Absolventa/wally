@@ -117,9 +117,7 @@
             imageWrapper = this._createImageWrapper();
             container.appendChild(imageWrapper);
             if (this.config.overlay) {
-                overlay = document.createElement('div');
-                overlay.className = this.config.overlayCssClassName;
-                overlay = this._styleOverlay(overlay);
+                overlay = this._createOverlay();
                 container.appendChild(overlay);
             }
             container = this._styleContainer(container);
@@ -127,6 +125,16 @@
         }
 
         return container;
+    };
+
+    Absolventa.Wally.prototype._createOverlay = function() {
+        var overlay;
+
+        overlay = document.createElement('div');
+        overlay.className = this.config.overlayCssClassName;
+        overlay = this._styleOverlay(overlay);
+
+        return overlay;
     };
 
     Absolventa.Wally.prototype._createImageWrapper = function() {
