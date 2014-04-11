@@ -19,11 +19,9 @@
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
-            filters : {
-                blur : false,
-                coloring : false,
-                coloringMethod : 'sepia' // 'sepia' or 'grayscale'
-            },
+            filterBlur : false,
+            filterColoring : false,
+            filterColoringMethod : 'sepia', // 'sepia' or 'grayscale'
             scrollAnimation : true,
             scrollAnimationStoppable : true,
             beforeMount : function(element) {
@@ -225,7 +223,7 @@
             imagesLength = this.images.length;
 
         for (i = 0; i < imagesLength; i += 1) {
-            if (this.config.filters.blur || this.config.filters.coloring) {
+            if (this.config.filterBlur || this.config.filterColoring) {
                 // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
                 this.images[i].style.WebkitFilter = this._getWebkitFilterString();
                 this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + this._getSvgFilterId() + ')';
@@ -236,15 +234,15 @@
     Absolventa.Wally.prototype._getWebkitFilterString = function() {
         var webkitFilterString = '';
 
-        if (this.config.filters.blur) {
+        if (this.config.filterBlur) {
             webkitFilterString += ' blur(5px)';
         }
 
-        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale') {
+        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
             webkitFilterString += ' grayscale(100%)';
         }
 
-        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia') {
+        if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
             webkitFilterString += ' sepia(100%)';
         }
 
@@ -254,18 +252,18 @@
     Absolventa.Wally.prototype._getSvgFilterId = function() {
         var svgFilterId = '';
 
-        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale' && this.config.filters.blur) {
+        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale' && this.config.filterBlur) {
             svgFilterId = '#grayscale_blur';
-        } else if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia' && this.config.filters.blur) {
+        } else if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia' && this.config.filterBlur) {
             svgFilterId = '#sepia_blur';
         } else {
-            if (this.config.filters.blur) {
+            if (this.config.filterBlur) {
                 svgFilterId = '#blur';
             }
-            if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale') {
+            if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
                 svgFilterId = '#grayscale';
             }
-            if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia') {
+            if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
                 svgFilterId = '#sepia';
             }
         }
