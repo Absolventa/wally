@@ -218,4 +218,38 @@
         element.style[property] = value;
     };
 
+    Absolventa.Wally.Helpers._addRequestAnimationPolyfill = function() {
+        // rAF polyfill via http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+        var lastTime = 0,
+            vendors = ['webkit', 'moz'],
+            x,
+            vendorsLength = vendors.length;
+
+        for (x = 0; x < vendorsLength && !window.requestAnimationFrame; x += 1) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback) {
+                var currTime = new Date().getTime(),
+                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+                    id = window.setTimeout(function() {
+                        callback(currTime + timeToCall);
+                    }, timeToCall);
+
+                lastTime = currTime + timeToCall;
+
+                return id;
+            };
+        }
+
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+        }
+    };
+
 }());
