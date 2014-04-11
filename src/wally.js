@@ -350,18 +350,24 @@
         }
     };
 
-    Absolventa.Wally.prototype._startAnimationViaCssTransition = function() {
+    Absolventa.Wally.prototype._startAnimationViaCssTransition = function(animationManuallyPaused) {
         var element = this.imageWrapper,
             that = this,
             seconds = that._convertScrollingSpeedToSeconds(that.scrollingSpeed, that.singleWrapperWidth),
-            distanceToScroll = this.singleWrapperWidth - 1,
             boundAnimation = function() {
-                that.imageWrapper.style.left = -distanceToScroll + 'px';
+                that.imageWrapper.style.left = -that.distanceToScroll + 'px';
             };
 
-        // reset to initial position
-        that._setPrefixes(element, 'Transition', 'none');
-        element.style.left = 0;
+        if (this.distanceToScroll === undefined) {
+            this.distanceToScroll = this.singleWrapperWidth - 1;
+        }
+
+        if (!animationManuallyPaused) {
+            // reset to initial position
+            this._setPrefixes(element, 'Transition', 'none');
+            element.style.left = 0;
+        }
+
 
         // set css transition on element
         setTimeout(function() {
