@@ -18,4 +18,15 @@
         return element;
     };
 
+    Absolventa.Wally.Styler.styleImageWrapper = function(wrapperElement, targetWidth, config) {
+        if (targetWidth) {
+            wrapperElement.style.width = targetWidth + 'px';
+        }
+        wrapperElement.style.height = config.containerHeight + 'px';
+        wrapperElement.style.overflowY = 'hidden';
+        wrapperElement.style.position = 'absolute';
+
+        return wrapperElement;
+    };
+
 }());
