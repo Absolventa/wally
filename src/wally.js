@@ -19,7 +19,11 @@
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
-            blur : false,
+            filters : {
+                blur : false,
+                coloring : false,
+                coloringMethod : 'sepia' // 'sepia' or 'grayscale'
+            },
             scrollAnimation : true,
             scrollAnimationStoppable : true,
             beforeMount : function(element) {
@@ -39,6 +43,7 @@
         this.singleWrapperWidth = 0;
         this.distanceToScroll = undefined;
         this.requestId = 0;
+        this.svgFiltersBase64 = 'PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGZpbHRlciBpZD0iYmx1ciI+CiAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI0IiAvPgogIDwvZmlsdGVyPgogIDxmaWx0ZXIgaWQ9InNlcGlhIj4KICAgIDxmZUNvbG9yTWF0cml4CiAgICAgIHR5cGU9Im1hdHJpeCIKICAgICAgdmFsdWVzPSIuMzQzIC42NjkgLjExOSAwIDAKICAgICAgICAgICAgICAuMjQ5IC42MjYgLjEzMCAwIDAKICAgICAgICAgICAgICAuMTcyIC4zMzQgLjExMSAwIDAKICAgICAgICAgICAgICAuMDAwIC4wMDAgLjAwMCAxIDAgIi8+CiAgPC9maWx0ZXI+CiAgPGZpbHRlciBpZD0iZ3JheXNjYWxlIj4KICAgIDxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwLjMzMzMgMC4zMzMzIDAuMzMzMyAwIDAgMC4zMzMzIDAuMzMzMyAwLjMzMzMgMCAwIDAuMzMzMyAwLjMzMzMgMC4zMzMzIDAgMCAwIDAgMCAxIDAiLz4KICA8L2ZpbHRlcj4KICA8ZmlsdGVyIGlkPSJncmF5c2NhbGVfYmx1ciI+CiAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI0IiAvPgogICAgPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAuMzMzMyAwLjMzMzMgMC4zMzMzIDAgMCAwLjMzMzMgMC4zMzMzIDAuMzMzMyAwIDAgMC4zMzMzIDAuMzMzMyAwLjMzMzMgMCAwIDAgMCAwIDEgMCIvPgogIDwvZmlsdGVyPgogIDxmaWx0ZXIgaWQ9InNlcGlhX2JsdXIiPgogICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIgLz4KICAgIDxmZUNvbG9yTWF0cml4CiAgICAgIHR5cGU9Im1hdHJpeCIKICAgICAgdmFsdWVzPSIuMzQzIC42NjkgLjExOSAwIDAKICAgICAgICAgICAgICAuMjQ5IC42MjYgLjEzMCAwIDAKICAgICAgICAgICAgICAuMTcyIC4zMzQgLjExMSAwIDAKICAgICAgICAgICAgICAuMDAwIC4wMDAgLjAwMCAxIDAgIi8+CiAgPC9maWx0ZXI+Cjwvc3ZnPg==';
 
         // first argument is possibly a config object
         if (Object.prototype.toString.call(selector) === '[object Object]') {
@@ -218,13 +223,54 @@
     Absolventa.Wally.prototype._styleImages = function() {
         var i,
             imagesLength = this.images.length;
+
         for (i = 0; i < imagesLength; i += 1) {
-            if (this.config.blur) {
+            if (this.config.filters.blur || this.config.filters.coloring) {
                 // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
-                this.images[i].style.WebkitFilter = 'blur(5px)';
-                this.images[i].style.filter = 'url(images/blur.svg#blur)';
+                this.images[i].style.WebkitFilter = this._getWebkitFilterString();
+                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + this._getSvgFilterId() + ')';
             }
         }
+    };
+
+    Absolventa.Wally.prototype._getWebkitFilterString = function() {
+        var webkitFilterString = '';
+
+        if (this.config.filters.blur) {
+            webkitFilterString += ' blur(5px)';
+        }
+
+        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale') {
+            webkitFilterString += ' grayscale(100%)';
+        }
+
+        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia') {
+            webkitFilterString += ' sepia(100%)';
+        }
+
+        return webkitFilterString;
+    };
+
+    Absolventa.Wally.prototype._getSvgFilterId = function() {
+        var svgFilterId = '';
+
+        if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale' && this.config.filters.blur) {
+            svgFilterId = '#grayscale_blur';
+        } else if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia' && this.config.filters.blur) {
+            svgFilterId = '#sepia_blur';
+        } else {
+            if (this.config.filters.blur) {
+                svgFilterId = '#blur';
+            }
+            if (this.config.filters.coloring && this.config.filters.coloringMethod === 'grayscale') {
+                svgFilterId = '#grayscale';
+            }
+            if (this.config.filters.coloring && this.config.filters.coloringMethod === 'sepia') {
+                svgFilterId = '#sepia';
+            }
+        }
+
+        return svgFilterId;
     };
 
     Absolventa.Wally.prototype._styleContainer = function(containerElement) {
