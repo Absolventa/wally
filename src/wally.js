@@ -25,10 +25,10 @@
             scrollAnimation : true,
             scrollAnimationStoppable : true,
             beforeMount : function(element) {
-
+                // callback
             },
             afterMount : function(element) {
-
+                // callback
             }
         };
 
