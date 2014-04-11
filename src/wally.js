@@ -382,34 +382,6 @@
         }
     };
 
-    Absolventa.Wally.prototype._startAnimationViaCssTransition = function(animationManuallyPaused) {
-        var element = this.imageWrapper,
-            that = this,
-            seconds = that._convertScrollingSpeedToSeconds(that.scrollingSpeed, that.singleWrapperWidth),
-            boundAnimation = function() {
-                that.imageWrapper.style.left = -that.distanceToScroll + 'px';
-            };
-
-        if (this.distanceToScroll === undefined) {
-            this.distanceToScroll = this.singleWrapperWidth - 1;
-        }
-
-        if (!animationManuallyPaused) {
-            // reset to initial position
-            Absolventa.Wally.Helpers._setPrefixes(element, 'Transition', 'none');
-            element.style.left = 0;
-        }
-
-
-        // set css transition on element
-        setTimeout(function() {
-            Absolventa.Wally.Helpers._setPrefixes(element, 'Transition', 'left ' + seconds + 's linear');
-        }, 1);
-
-        // trigger css transition
-        setTimeout(boundAnimation, 5);
-    };
-
     Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {
         var imageWrapper = this.imageWrapper,
             scrollingSpeed = this.config.scrollingSpeed / 100,
