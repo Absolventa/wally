@@ -40,15 +40,17 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
       .title {
         position: absolute;
         left: 0;
-        top: 518px;
+        top: 447px;
         width: 100%;
         z-index: 100;
-        padding-left: 50px;
         font-size: 75px;
         color: white;
         text-shadow: 10px 10px 10px rgba(0,0,0,0.7);
         background-color: rgba(0,0,0,0.8);
+        line-height: 200px;
+        text-align: center;
       }
+
     </style>
   </head>
   <body>
@@ -58,14 +60,6 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
       <img src="images/image_5.jpg">
       <img src="images/image_6.jpg">
       <img src="images/image_7.jpg">
-    </div>
-    <div class="wally_6_container">
-      <img src="images/image_5.jpg">
-      <img src="images/image_6.jpg">
-      <img src="images/image_7.jpg">
-      <img src="images/image_5.jpg">
-      <img src="images/image_7.jpg">
-      <img src="images/image_10.jpg">
     </div>
 
     <!-- <h2>Linked images</h2> -->
@@ -77,78 +71,33 @@ https://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.1/css/foundation.css">
       <img class="wally_element" src="images/image_7.jpg">
       <a class="wally_element" href="#8"><img src="images/image_5.jpg"></a>
     </div>
-
-    <!-- <h2>Inside of grid</h2> -->
-
-    <div class="wally_grid_container">
-      <img class="wally_element" src="images/image_6.jpg">
-      <a class="wally_element" href="#4"><img src="images/image_4.jpg"></a>
-      <a class="wally_element" href="#5"><img src="images/image_5.jpg"></a>
-      <a class="wally_element" href="#6"><img src="images/image_6.jpg"></a>
-      <img class="wally_element" src="images/image_7.jpg">
-      <a class="wally_element" href="#8"><img src="images/image_5.jpg"></a>
+    <div class="wally_6_container">
+      <img src="images/image_6.jpg">
+      <img src="images/image_7.jpg">
+      <img src="images/image_5.jpg">
+      <img src="images/image_7.jpg">
+      <img src="images/image_10.jpg">
     </div>
 
+    <script src="namespace.js"></script>
+    <script src="wally.js"></script>
+    <script src="helpers.js"></script>
+    <script>
+      var wallyLinked = new Absolventa.Wally('.wally_linked_container .wally_element', {
+        containerHeight : 400,
+        overlay : false
+      });
 
-    <!-- <h2>With blur, not animated</h2> -->
-<!--     <div class="wally_5_container">
-      <img src="images/image_8.jpg">
-      <img src="images/image_6.jpg">
-      <img src="images/image_7.jpg">
-      <img src="images/image_4.jpg">
-      <img src="images/image_5.jpg">
-      <img src="images/mini_image_1.jpg">
-    </div> -->
+      var wally6 = new Absolventa.Wally('.wally_6_container img', {
+        containerHeight : 200,
+        scrollingSpeed : 250
+      });
 
-    <!-- <h2>With blur and overlay, not animated</h2> -->
-<!--     <div class="wally_all_container">
-      <img src="images/image_8.jpg">
-      <img src="images/image_4.jpg">
-      <img src="images/image_5.jpg">
-      <img src="images/mini_image_1.jpg">
-      <img src="images/image_6.jpg">
-      <img src="images/image_7.jpg">
-      <img src="images/image_8.jpg">
-      <img src="images/image_9.jpg">
-      <img src="images/image_10.jpg">
-    </div> -->
-
-  <script src="namespace.js"></script>
-  <script src="wally.js"></script>
-  <script src="helpers.js"></script>
-  <script>
-    var wally3 = new Absolventa.Wally('.wally_3_container img', {
-      overlayColor : 'red'
-    });
-
-    var wally6 = new Absolventa.Wally('.wally_6_container img', {
-      containerHeight : 75,
-      scrollingSpeed : 100
-    });
-
-    var wallyLinked = new Absolventa.Wally('.wally_linked_container .wally_element', {
-      containerHeight : 300,
-      overlay : false,
-      scrollingSpeed : 150
-    });
-
-    var wallyGrid = new Absolventa.Wally('.wally_grid_container .wally_element', {
-      containerHeight : 50,
-      overlayColor: 'green'
-    });
-
-    var wallyAll = new Absolventa.Wally('.wally_all_container img', {
-      blur : true,
-      scrollAnimation : false,
-      containerHeight : 500
-    });
-
-    var wally5 = new Absolventa.Wally('.wally_5_container img', {
-      blur : true,
-      overlay: false,
-      scrollAnimation : false
-    });
-
-  </script>
+      var wally3 = new Absolventa.Wally('.wally_3_container img', {
+        overlayColor : 'orange',
+        overlayOpacity : 0.6,
+        containerHeight : 50
+      });
+    </script>
   </body>
 </html>
