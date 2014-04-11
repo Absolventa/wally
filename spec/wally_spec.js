@@ -94,6 +94,24 @@ describe("Wally", function() {
         expect(container.length).toEqual(1);
     });
 
+    it("creates an overlay element when param is true", function() {
+        var wally = new Absolventa.Wally('.wally_image', {
+                overlay : true
+            }),
+            overlay = document.getElementsByClassName(wally.config.overlayCssClassName);
+
+        expect(overlay[0].nodeType).toEqual(1);
+    });
+
+    it("does not create an overlay element when param is false", function() {
+        var wally = new Absolventa.Wally('.wally_image', {
+                overlay : false
+            }),
+            overlay = document.getElementsByClassName(wally.config.overlayCssClassName);
+
+        expect(overlay[0]).not.toBeDefined();
+    });
+
     it("creates an image wrapper element for images", function() {
         var wally = new Absolventa.Wally('.wally_image'),
             wrapper = document.getElementsByClassName(wally.config.imageWrapperCssClassName);

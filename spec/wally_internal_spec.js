@@ -52,6 +52,16 @@ describe("Sticks", function() {
         });
     });
 
+    describe("mounts container", function() {
+        it("only once", function() {
+            var wally = new Absolventa.Wally('.wally_image'),
+                wallyContainer = wally.container;
+
+            wally._mountContainer();
+
+            expect(wally.container).toEqual(wallyContainer);
+        });
+    });
     describe("image wrapper", function() {
         it("is not created, if already present", function() {
             var wally = new Absolventa.Wally('.wally_image');
