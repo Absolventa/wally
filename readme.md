@@ -6,7 +6,7 @@ A lightweight javascript plugin for interactive image walls.
 
 ##Demo
 
-TBD
+[Click](http://devnull.absolventa.de/wally)
 
 ##Usage
 
