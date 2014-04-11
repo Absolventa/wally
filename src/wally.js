@@ -169,16 +169,12 @@
             necessaryClones = 1;
 
         for (i = 0; i < imagesLength; i += 1) {
-            //imageWidth = (this.images[i].offsetWidth / this.images[i].offsetHeight * parseInt(this.images[i].style.height, 10));
             imageWidth = parseInt(this.images[i].style.width.replace('px', ''), 10);
 
             imageWidth += this.config.marginBetweenElements;
 
             wrapperWidth += imageWidth;
         }
-
-        // Manual fix for wrong image dimension rounding
-        // wrapperWidth = wrapperWidth + (this.images.length + 1);
 
         this.singleWrapperWidth = wrapperWidth;
 
