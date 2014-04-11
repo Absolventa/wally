@@ -19,6 +19,7 @@ module.exports = function(config) {
         'src/namespace.js',
         'src/wally.js',
         'src/helpers.js',
+        'src/styler.js',
         'spec/*.js'
     ],
 

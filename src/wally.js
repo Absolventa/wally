@@ -150,7 +150,7 @@
             imageWrapper = document.createElement('div');
             imageWrapper.className = this.config.imageWrapperCssClassName;
             for (i = 0; i < imagesLength; i += 1) {
-                this._styleImage(this.elements[i].wallyImageElement);
+                Absolventa.Wally.Styler.styleImage(this.elements[i].wallyImageElement, this.config);
                 imageWrapper.appendChild(this.elements[i]);
             }
             imageWrapper = this._styleImageWrapper(imageWrapper);
@@ -192,17 +192,6 @@
         this.necessaryClones = necessaryClones;
 
         return wrapperWidth;
-    };
-
-    Absolventa.Wally.prototype._styleImage = function(element) {
-        element.style.cssFloat = 'left';
-        element.style.styleFloat = 'left'; // IE
-        element.style.height = this.config.containerHeight + 'px';
-        element.style.marginRight = this.config.marginBetweenElements + 'px';
-
-        element.style.width = element.width / element.height * this.config.containerHeight + 'px';
-
-        return element;
     };
 
     Absolventa.Wally.prototype._styleImageWrapper = function(wrapperElement) {

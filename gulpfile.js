@@ -12,6 +12,7 @@ var testFiles = [
     'src/namespace.js',
     'src/wally.js',
     'src/helpers.js',
+    'src/styler.js',
     'spec/wally_spec.js',
     'spec/wally_internal_spec.js',
     'spec/wally_helpers_spec.js'
@@ -21,6 +22,7 @@ var distJsFiles = [
     'src/namespace.js',
     'src/wally.js',
     'src/helpers.js',
+    'src/styler.js'
 ]
 
 gulp.task('default', function(){
