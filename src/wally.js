@@ -21,6 +21,7 @@
             overlayOpacity : 0.6,
             blur : false,
             scrollAnimation : true,
+            scrollAnimationStoppable : true,
             beforeMount : function(element) {
 
             },
@@ -36,6 +37,8 @@
         this.animationInterval = undefined;
         this.necessaryClones = 0;
         this.singleWrapperWidth = 0;
+        this.distanceToScroll = undefined;
+        this.requestId = 0;
 
         // first argument is possibly a config object
         if (Object.prototype.toString.call(selector) === '[object Object]') {
@@ -73,6 +76,9 @@
 
             if (this.config.scrollAnimation) {
                 this._startAnimation();
+                if (this.config.scrollAnimationStoppable) {
+                    this._addEventHandlerForContainerHovering();
+                }
             }
 
             for (i = 0; i < this.necessaryClones; i += 1) {
@@ -293,16 +299,54 @@
         }
     };
 
-    Absolventa.Wally.prototype._startAnimation = function() {
-        var that = this;
+    Absolventa.Wally.prototype._addEventHandlerForContainerHovering = function() {
+        var that = this,
+            stopAnimation = function() {
+                that._stopAnimation();
+            },
+            startAnimation = function(e) {
+                var shouldStartAnimation = that._shouldAnimationStart(e);
 
-        if (window.chrome) {
-            this._startAnimationViaCssTransition();
-            this.imageWrapper.addEventListener('webkitTransitionEnd', function() {
-                that._startAnimationViaCssTransition();
-            });
-        } else {
-            this._startAnimationViaRequestAnimationFrame();
+                if (shouldStartAnimation) {
+                    that._startAnimation();
+                }
+            };
+        Absolventa.Wally.Helpers._addEventListener(this.container, 'mouseover', stopAnimation);
+        Absolventa.Wally.Helpers._addEventListener(this.container, 'mouseout', startAnimation);
+    };
+
+    Absolventa.Wally.prototype._shouldAnimationStart = function(e) {
+        var i,
+            imagesLength = this.images.length,
+            elementsLength = this.elements.length;
+
+        for (i = 0; i < imagesLength; i += 1) {
+            if (this.images[i] === e.relatedTarget) {
+                return false;
+            }
+        }
+
+        for (i = 0; i < elementsLength; i += 1) {
+            if (this.elements[i] === e.relatedTarget) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    Absolventa.Wally.prototype._startAnimation = function() {
+        this._startAnimationViaRequestAnimationFrame();
+    };
+
+    Absolventa.Wally.prototype._stopAnimation = function() {
+        this._stopRequestAnimationFrame();
+    };
+
+    Absolventa.Wally.prototype._stopRequestAnimationFrame = function() {
+        if (this.requestId) {
+            window.cancelAnimationFrame(this.requestId);
+            this.requestId = undefined;
         }
     };
 
@@ -337,20 +381,24 @@
     };
 
     Absolventa.Wally.prototype._startAnimationViaRequestAnimationFrame = function() {
-        var distancePassed = 0,
-            imageWrapper = this.imageWrapper,
+        var imageWrapper = this.imageWrapper,
             scrollingSpeed = this.config.scrollingSpeed / 100,
             that = this;
 
+        this.distanceToScroll = this.distanceToScroll || this.singleWrapperWidth - 1;
+
         function animation() {
-            distancePassed += scrollingSpeed;
-            imageWrapper.style.left = -distancePassed + "px";
-            if (distancePassed >= that.singleWrapperWidth - 1) {
-                distancePassed = 0;
+            that.distanceToScroll -= scrollingSpeed;
+            imageWrapper.style.left = -(that.singleWrapperWidth - that.distanceToScroll) + "px";
+            if (that.distanceToScroll <= 0) {
+                that.distanceToScroll = that.singleWrapperWidth - 1;
             }
+            that.requestId = window.requestAnimationFrame(animation);
+        }
+        if (!this.requestId) {
             window.requestAnimationFrame(animation);
         }
-        window.requestAnimationFrame(animation);
+
     };
 
     Absolventa.Wally.prototype._convertScrollingSpeedToSeconds = function() {
