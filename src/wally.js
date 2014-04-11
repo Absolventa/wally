@@ -201,50 +201,10 @@
         for (i = 0; i < imagesLength; i += 1) {
             if (this.config.filterBlur || this.config.filterColoring) {
                 // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
-                this.images[i].style.WebkitFilter = this._getWebkitFilterString();
-                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + this._getSvgFilterId() + ')';
+                this.images[i].style.WebkitFilter = Absolventa.Wally.Styler.getWebkitFilterString(this.config);
+                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + Absolventa.Wally.Styler.getSvgFilterId(this.config) + ')';
             }
         }
-    };
-
-    Absolventa.Wally.prototype._getWebkitFilterString = function() {
-        var webkitFilterString = '';
-
-        if (this.config.filterBlur) {
-            webkitFilterString += ' blur(5px)';
-        }
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
-            webkitFilterString += ' grayscale(100%)';
-        }
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
-            webkitFilterString += ' sepia(100%)';
-        }
-
-        return webkitFilterString;
-    };
-
-    Absolventa.Wally.prototype._getSvgFilterId = function() {
-        var svgFilterId = '';
-
-        if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale' && this.config.filterBlur) {
-            svgFilterId = '#grayscale_blur';
-        } else if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia' && this.config.filterBlur) {
-            svgFilterId = '#sepia_blur';
-        } else {
-            if (this.config.filterBlur) {
-                svgFilterId = '#blur';
-            }
-            if (this.config.filterColoring && this.config.filterColoringMethod === 'grayscale') {
-                svgFilterId = '#grayscale';
-            }
-            if (this.config.filterColoring && this.config.filterColoringMethod === 'sepia') {
-                svgFilterId = '#sepia';
-            }
-        }
-
-        return svgFilterId;
     };
 
     Absolventa.Wally.prototype._styleContainer = function(containerElement) {

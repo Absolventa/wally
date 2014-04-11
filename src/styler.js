@@ -29,4 +29,44 @@
         return wrapperElement;
     };
 
+    Absolventa.Wally.Styler.getWebkitFilterString = function(config) {
+        var webkitFilterString = '';
+
+        if (config.filterBlur) {
+            webkitFilterString += ' blur(5px)';
+        }
+
+        if (config.filterColoring && config.filterColoringMethod === 'grayscale') {
+            webkitFilterString += ' grayscale(100%)';
+        }
+
+        if (config.filterColoring && config.filterColoringMethod === 'sepia') {
+            webkitFilterString += ' sepia(100%)';
+        }
+
+        return webkitFilterString;
+    };
+
+    Absolventa.Wally.Styler.getSvgFilterId = function(config) {
+        var svgFilterId = '';
+
+        if (config.filterColoring && config.filterColoringMethod === 'grayscale' && config.filterBlur) {
+            svgFilterId = '#grayscale_blur';
+        } else if (config.filterColoring && config.filterColoringMethod === 'sepia' && config.filterBlur) {
+            svgFilterId = '#sepia_blur';
+        } else {
+            if (config.filterBlur) {
+                svgFilterId = '#blur';
+            }
+            if (config.filterColoring && config.filterColoringMethod === 'grayscale') {
+                svgFilterId = '#grayscale';
+            }
+            if (config.filterColoring && config.filterColoringMethod === 'sepia') {
+                svgFilterId = '#sepia';
+            }
+        }
+
+        return svgFilterId;
+    };
+
 }());
