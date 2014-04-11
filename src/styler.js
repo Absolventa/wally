@@ -38,6 +38,17 @@
         return containerElement;
     };
 
+    Absolventa.Wally.Styler.styleOverlay = function(overlayElement, config) {
+        overlayElement.style.height = config.containerHeight;
+        overlayElement.style.width = '100%';
+        overlayElement.style.position = 'absolute';
+        overlayElement.style.backgroundColor = config.overlayColor;
+        overlayElement.style.opacity = config.overlayOpacity;
+        overlayElement.style.filter = 'alpha(opacity=' + config.overlayOpacity * 100 + ')';
+
+        return overlayElement;
+    };
+
     Absolventa.Wally.Styler.getWebkitFilterString = function(config) {
         var webkitFilterString = '';
 

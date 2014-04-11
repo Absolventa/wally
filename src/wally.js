@@ -135,7 +135,7 @@
 
         overlay = document.createElement('div');
         overlay.className = this.config.overlayCssClassName;
-        overlay = this._styleOverlay(overlay);
+        overlay = Absolventa.Wally.Styler.styleOverlay(overlay, this.config);
 
         return overlay;
     };
@@ -205,17 +205,6 @@
                 this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + Absolventa.Wally.Styler.getSvgFilterId(this.config) + ')';
             }
         }
-    };
-
-    Absolventa.Wally.prototype._styleOverlay = function(overlayElement) {
-        overlayElement.style.height = this.config.containerHeight;
-        overlayElement.style.width = '100%';
-        overlayElement.style.position = 'absolute';
-        overlayElement.style.backgroundColor = this.config.overlayColor;
-        overlayElement.style.opacity = this.config.overlayOpacity;
-        overlayElement.style.filter = 'alpha(opacity=' + this.config.overlayOpacity * 100 + ')';
-
-        return overlayElement;
     };
 
     Absolventa.Wally.prototype._mountElements = function(selector) {
