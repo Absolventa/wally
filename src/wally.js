@@ -75,7 +75,7 @@
             targetElement.appendChild(container);
 
             // we set width of image wrapper, when images are appended to the dom
-            Absolventa.Wally.Styler.styleImageWrapper(this.imageWrapper, this._getNecessaryWrapperWidth(), this.config);
+            Absolventa.Wally.Styler.styleImageWrapper(this.imageWrapper, this.config, this._getNecessaryWrapperWidth());
 
             if (this.config.scrollAnimation) {
                 this._startAnimation();
@@ -153,7 +153,7 @@
                 Absolventa.Wally.Styler.styleImage(this.elements[i].wallyImageElement, this.config);
                 imageWrapper.appendChild(this.elements[i]);
             }
-            imageWrapper = Absolventa.Wally.Styler.styleImageWrapper(imageWrapper, this._getNecessaryWrapperWidth(), this.config);
+            imageWrapper = Absolventa.Wally.Styler.styleImageWrapper(imageWrapper, this.config, this._getNecessaryWrapperWidth());
 
             this.imageWrapper = imageWrapper;
 

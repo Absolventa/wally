@@ -53,9 +53,9 @@ describe("Sticks", function() {
 
         beforeEach(function() {
             element = document.createElement('div');
-            Absolventa.Wally.Styler.styleImageWrapper(element, 1920, {
+            Absolventa.Wally.Styler.styleImageWrapper(element, {
                 containerHeight : 350
-            });
+            }, 1920);
         });
         it("returns valid node element", function() {
             expect(element.nodeType).toEqual(1);
@@ -71,6 +71,19 @@ describe("Sticks", function() {
         it("sets position to absolute", function() {
             expect(element.style.position).toEqual('absolute');
         });
+
+        it("sets width correctly", function() {
+            expect(element.style.width).toEqual('1920px');
+        });
+
+        it("does not set width if targetWidth is missing", function() {
+            element = document.createElement('div');
+            Absolventa.Wally.Styler.styleImageWrapper(element, {
+                containerHeight : 350
+            });
+            expect(element.style.width).toBeFalsy();
+        });
+
     });
 
     describe("styleImage method", function() {

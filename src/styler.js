@@ -18,7 +18,7 @@
         return element;
     };
 
-    Absolventa.Wally.Styler.styleImageWrapper = function(wrapperElement, targetWidth, config) {
+    Absolventa.Wally.Styler.styleImageWrapper = function(wrapperElement, config, targetWidth) {
         if (targetWidth) {
             wrapperElement.style.width = targetWidth + 'px';
         }
