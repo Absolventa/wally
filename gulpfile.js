@@ -15,7 +15,8 @@ var testFiles = [
     'src/styler.js',
     'spec/wally_spec.js',
     'spec/wally_internal_spec.js',
-    'spec/wally_helpers_spec.js'
+    'spec/wally_helpers_spec.js',
+    'spec/wally_styler_spec.js'
 ];
 
 var distJsFiles = [

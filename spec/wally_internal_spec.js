@@ -88,4 +88,5 @@ describe("Sticks", function() {
             expect(wally._createContainer()).toEqual(undefined);
         });
     });
+
 });

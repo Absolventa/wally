@@ -163,5 +163,4 @@ describe("Wally", function() {
         expect(testElement).toEqual(wally.container);
     });
 
-
 });
