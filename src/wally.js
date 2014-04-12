@@ -15,13 +15,13 @@
             imageWrapperCssClassName : 'wally_images',
             overlayCssClassName : 'wally_overlay',
             cloneCssClassName : 'wally_clone_images',
-            scrollingSpeed : 200,
+            scrollingSpeed : 300,
             overlay : true,
             overlayColor : '#0D596B',
             overlayOpacity : 0.6,
             filterBlur : false,
-            filterColoring : false,
-            filterColoringMethod : 'sepia', // 'sepia' or 'grayscale'
+            filterColoring : true,
+            filterColoringMethod : 'grayscale', // 'sepia' or 'grayscale'
             scrollAnimation : true,
             scrollAnimationStoppable : true,
             beforeMount : function() {
@@ -82,6 +82,7 @@
                 if (this.config.scrollAnimationStoppable) {
                     this._addEventHandlerForContainerHovering();
                 }
+                this._addEventHandlerForImages();
             }
 
             for (i = 0; i < this.necessaryClones; i += 1) {
@@ -195,12 +196,21 @@
             imagesLength = this.images.length;
 
         for (i = 0; i < imagesLength; i += 1) {
-            if (this.config.filterBlur || this.config.filterColoring) {
-                // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
-                this.images[i].style.WebkitFilter = Absolventa.Wally.Styler.getWebkitFilterString(this.config);
-                this.images[i].style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + Absolventa.Wally.Styler.getSvgFilterId(this.config) + ')';
-            }
+            this._styleImage(this.images[i]);
         }
+    };
+
+    Absolventa.Wally.prototype._styleImage = function(image) {
+        if (this.config.filterBlur || this.config.filterColoring) {
+            // hint: using blur via filter or svg is performance critical. You should consider using already blurred images
+            image.style.WebkitFilter = Absolventa.Wally.Styler.getWebkitFilterString(this.config);
+            image.style.filter = 'url(data:image/svg+xml;base64,' + this.svgFiltersBase64 + Absolventa.Wally.Styler.getSvgFilterId(this.config) + ')';
+        }
+    };
+
+    Absolventa.Wally.prototype._unstyleImage = function(image) {
+        image.style.WebkitFilter = '';
+        image.style.filter = '';
     };
 
     Absolventa.Wally.prototype._mountElements = function(selector) {
@@ -256,6 +266,24 @@
             };
         Absolventa.Wally.Helpers._addEventListener(this.container, 'mouseover', stopAnimation);
         Absolventa.Wally.Helpers._addEventListener(this.container, 'mouseout', startAnimation);
+    };
+
+    Absolventa.Wally.prototype._addEventHandlerForImages = function() {
+        var i,
+            imagesLength = this.images.length,
+            that = this,
+            unstyleImage = function() {
+                return that._unstyleImage(this);
+            },
+
+            styleImage = function() {
+                return that._styleImage(this);
+            };
+
+        for (i = 0; i < imagesLength; i += 1) {
+            Absolventa.Wally.Helpers._addEventListener(this.images[i], 'mouseover', unstyleImage);
+            Absolventa.Wally.Helpers._addEventListener(this.images[i], 'mouseout', styleImage);
+        }
     };
 
     Absolventa.Wally.prototype._shouldAnimationStart = function(e) {
